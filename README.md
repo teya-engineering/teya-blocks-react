@@ -596,4 +596,4 @@ Contributions welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before sub
 
 ## License
 
-[MIT](LICENSE)
+[Apache 2.0](LICENSE)
