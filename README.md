@@ -97,6 +97,7 @@ const CheckoutForm = () => {
 - [Teya Blocks documentation](https://teya.com/docs)
 - [API reference](#api-reference)
 - [Examples](#examples)
+- [More examples](examples/) - Checkout, Card, Card Fields, Apple Pay
 
 ## API Reference
 
