@@ -6,6 +6,7 @@ React components and hooks for [Teya Blocks](https://teya.com) payment integrati
 
 ## Requirements
 
+- `@teyaproduct/teya-blocks-js` 1.0+
 - React 18.0+ or 19.0+
 
 ## Getting Started
