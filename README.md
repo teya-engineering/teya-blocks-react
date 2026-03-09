@@ -2,33 +2,29 @@
 
 React components and hooks for [Teya Blocks](https://teya.com) payment integration.
 
-[![npm version](https://img.shields.io/npm/v/@teya-blocks/react.svg?style=flat-square)](https://www.npmjs.com/package/@teya-blocks/react)
+[![npm version](https://img.shields.io/npm/v/%40teya-blocks%2Freact.svg?style=flat-square)](https://www.npmjs.com/package/@teya-blocks/react)
 
 ## Requirements
 
 - React 18.0+ or 19.0+
-- `@teya/teya-blocks-js` 1.0+
 
 ## Getting Started
 
 ### Installation
 
 ```sh
-npm install @teya-blocks/react @teya/teya-blocks-js
+npm install @teyaproduct/teya-blocks-js @teya-blocks/react
 ```
 
 ### Minimal Example
 
 ```jsx
-import {useMemo} from 'react';
-import {loadTeyaBlocks} from '@teya/teya-blocks-js';
-import {TeyaBlocksProvider, CheckoutElement} from '@teya-blocks/react';
+import { useMemo } from 'react';
+import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
+import { TeyaBlocksProvider, CheckoutElement } from '@teya-blocks/react';
 
 const App = () => {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks('your_session_token'),
-    []
-  );
+  const teyaPromise = useMemo(() => initTeyaBlocks('your_session_token'), []);
 
   return (
     <TeyaBlocksProvider teya={teyaPromise}>
@@ -56,15 +52,12 @@ const CheckoutForm = () => {
 For full control over your payment UI, use the hooks API.
 
 ```jsx
-import {useMemo} from 'react';
-import {loadTeyaBlocks} from '@teya/teya-blocks-js';
-import {TeyaBlocksProvider, useCheckout} from '@teya-blocks/react';
+import { useMemo } from 'react';
+import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
+import { TeyaBlocksProvider, useCheckout } from '@teya-blocks/react';
 
 const App = () => {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks('your_session_token'),
-    []
-  );
+  const teyaPromise = useMemo(() => initTeyaBlocks('your_session_token'), []);
 
   return (
     <TeyaBlocksProvider teya={teyaPromise}>
@@ -74,7 +67,7 @@ const App = () => {
 };
 
 const CheckoutForm = () => {
-  const {checkoutRef, submitPayment} = useCheckout({
+  const { checkoutRef, submitPayment } = useCheckout({
     onSuccess: (response, method) => {
       console.log('Paid via', method, response);
     },
@@ -84,7 +77,12 @@ const CheckoutForm = () => {
   });
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); submitPayment(); }}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        submitPayment();
+      }}
+    >
       <div ref={checkoutRef} />
       <button type="submit">Pay</button>
     </form>
@@ -103,23 +101,23 @@ const CheckoutForm = () => {
 
 ### `TeyaBlocksProvider`
 
-All components and hooks must be wrapped in a `TeyaBlocksProvider`. It accepts a `TeyaBlocks` instance or the `Promise` returned by `loadTeyaBlocks()`.
+All components and hooks must be wrapped in a `TeyaBlocksProvider`. It accepts a `TeyaBlocks` instance or the `Promise` returned by `initTeyaBlocks()`.
 
 ```jsx
-import {loadTeyaBlocks} from '@teya/teya-blocks-js';
-import {TeyaBlocksProvider} from '@teya-blocks/react';
+import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
+import { TeyaBlocksProvider } from '@teya-blocks/react';
 
-const teyaPromise = loadTeyaBlocks('your_session_token');
+const teyaPromise = initTeyaBlocks('your_session_token');
 
 <TeyaBlocksProvider teya={teyaPromise}>
   <App />
-</TeyaBlocksProvider>
+</TeyaBlocksProvider>;
 ```
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `teya` | `TeyaBlocks \| Promise<TeyaBlocks \| null> \| null` | SDK instance or promise from `loadTeyaBlocks()` |
-| `children` | `ReactNode` | Child components |
+| Prop       | Type                                                | Description                                     |
+| ---------- | --------------------------------------------------- | ----------------------------------------------- |
+| `teya`     | `TeyaBlocks \| Promise<TeyaBlocks \| null> \| null` | SDK instance or promise from `initTeyaBlocks()` |
+| `children` | `ReactNode`                                         | Child components                                |
 
 ### Components
 
@@ -128,8 +126,8 @@ const teyaPromise = loadTeyaBlocks('your_session_token');
 Unified payment form with card and Apple Pay support. This is the recommended way to accept payments.
 
 ```jsx
-import {useRef} from 'react';
-import {CheckoutElement} from '@teya-blocks/react';
+import { useRef } from 'react';
+import { CheckoutElement } from '@teya-blocks/react';
 
 const PaymentForm = () => {
   const checkoutRef = useRef(null);
@@ -138,44 +136,42 @@ const PaymentForm = () => {
     <>
       <CheckoutElement
         ref={checkoutRef}
-        options={{hideSubmitButton: true}}
+        options={{ hideSubmitButton: true }}
         onSuccess={(response, method) => console.log('Paid via', method)}
         onError={(error, method) => console.error(error)}
         onTokenRefresh={async () => {
           const res = await fetch('/api/refresh-session');
-          const {sessionToken} = await res.json();
+          const { sessionToken } = await res.json();
           return sessionToken;
         }}
         containerStyles={{
-          card: {minHeight: '100px'},
-          applePay: {marginTop: '16px'},
+          card: { minHeight: '100px' },
+          applePay: { marginTop: '16px' },
         }}
       />
-      <button onClick={() => checkoutRef.current?.submitPayment()}>
-        Pay Now
-      </button>
+      <button onClick={() => checkoutRef.current?.submitPayment()}>Pay Now</button>
     </>
   );
 };
 ```
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `options` | `CheckoutElementOptions` | SDK checkout configuration |
-| `onReady` | `() => void` | Called when element is ready |
-| `onChange` | `(event: ElementChangeEvent) => void` | Called on form state changes |
-| `onSuccess` | `(response, paymentMethod) => void` | Called on payment success |
-| `onError` | `(error, paymentMethod) => void` | Called on payment failure |
-| `onTokenRefresh` | `() => Promise<string>` | Called to refresh an expiring session token |
-| `submitButtonProps` | `object` | Submit button customization |
-| `containerStyles` | `{card?: CSSProperties; applePay?: CSSProperties}` | Container styles for child elements |
-| `className` | `string` | Container CSS class |
-| `style` | `CSSProperties` | Container inline styles |
+| Prop                | Type                                               | Description                                 |
+| ------------------- | -------------------------------------------------- | ------------------------------------------- |
+| `options`           | `CheckoutElementOptions`                           | SDK checkout configuration                  |
+| `onReady`           | `() => void`                                       | Called when element is ready                |
+| `onChange`          | `(event: ElementChangeEvent) => void`              | Called on form state changes                |
+| `onSuccess`         | `(response, paymentMethod) => void`                | Called on payment success                   |
+| `onError`           | `(error, paymentMethod) => void`                   | Called on payment failure                   |
+| `onTokenRefresh`    | `() => Promise<string>`                            | Called to refresh an expiring session token |
+| `submitButtonProps` | `object`                                           | Submit button customization                 |
+| `containerStyles`   | `{card?: CSSProperties; applePay?: CSSProperties}` | Container styles for child elements         |
+| `className`         | `string`                                           | Container CSS class                         |
+| `style`             | `CSSProperties`                                    | Container inline styles                     |
 
 **Ref methods:**
 
-| Method | Returns | Description |
-|--------|---------|-------------|
+| Method            | Returns                          | Description                         |
+| ----------------- | -------------------------------- | ----------------------------------- |
 | `submitPayment()` | `Promise<PaymentSubmitResponse>` | Programmatically submit the payment |
 
 ---
@@ -185,8 +181,8 @@ const PaymentForm = () => {
 Single card input collecting card number, expiry, and CVC.
 
 ```jsx
-import {useRef} from 'react';
-import {CardElement} from '@teya-blocks/react';
+import { useRef } from 'react';
+import { CardElement } from '@teya-blocks/react';
 
 const CardForm = () => {
   const cardRef = useRef(null);
@@ -195,7 +191,7 @@ const CardForm = () => {
     <>
       <CardElement
         ref={cardRef}
-        options={{hidePostalCode: true}}
+        options={{ hidePostalCode: true }}
         onChange={(e) => console.log('Complete:', e.complete)}
         onSuccess={(response) => console.log('Paid:', response)}
         onError={(error) => console.error(error)}
@@ -206,23 +202,23 @@ const CardForm = () => {
 };
 ```
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `options` | `CardElementOptions` | Card element configuration |
-| `onReady` | `(element) => void` | Called when element is ready |
-| `onChange` | `(event: ElementChangeEvent) => void` | Called on field state changes |
-| `onFocus` | `() => void` | Called when element receives focus |
-| `onBlur` | `() => void` | Called when element loses focus |
-| `onSuccess` | `(response) => void` | Called on payment success |
-| `onError` | `(error) => void` | Called on payment failure |
-| `onTokenRefresh` | `() => Promise<string>` | Called to refresh an expiring session token |
-| `className` | `string` | Container CSS class |
-| `style` | `CSSProperties` | Container inline styles |
+| Prop             | Type                                  | Description                                 |
+| ---------------- | ------------------------------------- | ------------------------------------------- |
+| `options`        | `CardElementOptions`                  | Card element configuration                  |
+| `onReady`        | `(element) => void`                   | Called when element is ready                |
+| `onChange`       | `(event: ElementChangeEvent) => void` | Called on field state changes               |
+| `onFocus`        | `() => void`                          | Called when element receives focus          |
+| `onBlur`         | `() => void`                          | Called when element loses focus             |
+| `onSuccess`      | `(response) => void`                  | Called on payment success                   |
+| `onError`        | `(error) => void`                     | Called on payment failure                   |
+| `onTokenRefresh` | `() => Promise<string>`               | Called to refresh an expiring session token |
+| `className`      | `string`                              | Container CSS class                         |
+| `style`          | `CSSProperties`                       | Container inline styles                     |
 
 **Ref methods:**
 
-| Method | Returns | Description |
-|--------|---------|-------------|
+| Method            | Returns                          | Description                         |
+| ----------------- | -------------------------------- | ----------------------------------- |
 | `submitPayment()` | `Promise<PaymentSubmitResponse>` | Programmatically submit the payment |
 
 ---
@@ -232,15 +228,15 @@ const CardForm = () => {
 Renders an Apple Pay button. Automatically hides when Apple Pay is unavailable.
 
 ```jsx
-import {ApplePayElement} from '@teya-blocks/react';
+import { ApplePayElement } from '@teya-blocks/react';
 
 const ApplePay = () => (
   <ApplePayElement
-    options={{buttonType: 'buy', buttonColor: 'black'}}
+    options={{ buttonType: 'buy', buttonColor: 'black' }}
     paymentRequest={{
       countryCode: 'US',
       currencyCode: 'USD',
-      total: {label: 'My Store', amount: '10.00'},
+      total: { label: 'My Store', amount: '10.00' },
     }}
     autoSubmit
     onPaymentCompleted={(result) => {
@@ -253,19 +249,19 @@ const ApplePay = () => (
 );
 ```
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `options` | `ApplePayElementOptions` | Button styling options |
-| `paymentRequest` | `ApplePayPaymentRequest` | Payment request configuration |
-| `autoSubmit` | `boolean` | Auto-initiate payment on click (default: `false`) |
-| `onReady` | `(element) => void` | Called when element is ready |
-| `onClick` | `() => void` | Called when button is clicked |
-| `onPaymentCompleted` | `(result) => void` | Called when payment completes |
-| `onCancel` | `() => void` | Called when user cancels |
-| `onError` | `(error: Error) => void` | Called when an error occurs |
-| `onChange` | `(event) => void` | Called when availability changes |
-| `className` | `string` | Container CSS class |
-| `style` | `CSSProperties` | Container inline styles |
+| Prop                 | Type                     | Description                                       |
+| -------------------- | ------------------------ | ------------------------------------------------- |
+| `options`            | `ApplePayElementOptions` | Button styling options                            |
+| `paymentRequest`     | `ApplePayPaymentRequest` | Payment request configuration                     |
+| `autoSubmit`         | `boolean`                | Auto-initiate payment on click (default: `false`) |
+| `onReady`            | `(element) => void`      | Called when element is ready                      |
+| `onClick`            | `() => void`             | Called when button is clicked                     |
+| `onPaymentCompleted` | `(result) => void`       | Called when payment completes                     |
+| `onCancel`           | `() => void`             | Called when user cancels                          |
+| `onError`            | `(error: Error) => void` | Called when an error occurs                       |
+| `onChange`           | `(event) => void`        | Called when availability changes                  |
+| `className`          | `string`                 | Container CSS class                               |
+| `style`              | `CSSProperties`          | Container inline styles                           |
 
 ---
 
@@ -285,7 +281,7 @@ const CustomCardForm = () => (
     <label>Card Number</label>
     <CardNumberElement onChange={(e) => console.log(e)} />
 
-    <div style={{display: 'flex', gap: '12px'}}>
+    <div style={{ display: 'flex', gap: '12px' }}>
       <div>
         <label>Expiry</label>
         <CardExpiryElement />
@@ -301,15 +297,15 @@ const CustomCardForm = () => (
 
 All three share the same props:
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `options` | `CardElementOptions` | Element configuration |
-| `onReady` | `() => void` | Called when element is ready |
-| `onChange` | `(event: ElementChangeEvent) => void` | Called on field state changes |
-| `onFocus` | `() => void` | Called when element receives focus |
-| `onBlur` | `() => void` | Called when element loses focus |
-| `className` | `string` | Container CSS class |
-| `style` | `CSSProperties` | Container inline styles |
+| Prop        | Type                                  | Description                        |
+| ----------- | ------------------------------------- | ---------------------------------- |
+| `options`   | `CardElementOptions`                  | Element configuration              |
+| `onReady`   | `() => void`                          | Called when element is ready       |
+| `onChange`  | `(event: ElementChangeEvent) => void` | Called on field state changes      |
+| `onFocus`   | `() => void`                          | Called when element receives focus |
+| `onBlur`    | `() => void`                          | Called when element loses focus    |
+| `className` | `string`                              | Container CSS class                |
+| `style`     | `CSSProperties`                       | Container inline styles            |
 
 ---
 
@@ -318,12 +314,12 @@ All three share the same props:
 Error boundary that catches rendering errors in payment components.
 
 ```jsx
-import {PaymentErrorBoundary, CardElement} from '@teya-blocks/react';
+import { PaymentErrorBoundary, CardElement } from '@teya-blocks/react';
 
 const SafePayment = () => (
   <PaymentErrorBoundary
     onError={(error) => console.error('Payment error:', error)}
-    fallback={({error, resetError}) => (
+    fallback={({ error, resetError }) => (
       <div>
         <p>Payment form failed to load: {error.message}</p>
         <button onClick={resetError}>Retry</button>
@@ -335,12 +331,12 @@ const SafePayment = () => (
 );
 ```
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `children` | `ReactNode` | Child components to protect |
-| `fallback` | `ReactNode \| ({error, resetError}) => ReactNode` | Custom fallback UI |
-| `onError` | `(error, errorInfo) => void` | Called when an error is caught |
-| `onReset` | `() => void` | Called when error state is reset |
+| Prop       | Type                                              | Description                      |
+| ---------- | ------------------------------------------------- | -------------------------------- |
+| `children` | `ReactNode`                                       | Child components to protect      |
+| `fallback` | `ReactNode \| ({error, resetError}) => ReactNode` | Custom fallback UI               |
+| `onError`  | `(error, errorInfo) => void`                      | Called when an error is caught   |
+| `onReset`  | `() => void`                                      | Called when error state is reset |
 
 ---
 
@@ -349,19 +345,19 @@ const SafePayment = () => (
 Placeholder component shown while payment elements load. Built-in to `CardElement` and `CheckoutElement`, but also available for custom usage.
 
 ```jsx
-import {LoadingSkeleton} from '@teya-blocks/react';
+import { LoadingSkeleton } from '@teya-blocks/react';
 
-<LoadingSkeleton height={40} width="100%" ariaLabel="Loading card input" />
+<LoadingSkeleton height={40} width="100%" ariaLabel="Loading card input" />;
 ```
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `height` | `number \| string` | `40` | Skeleton height |
-| `width` | `number \| string` | `'100%'` | Skeleton width |
-| `animate` | `boolean` | `true` | Enable pulse animation |
-| `ariaLabel` | `string` | `'Loading...'` | Screen reader label |
-| `className` | `string` | - | CSS class |
-| `style` | `CSSProperties` | - | Inline styles |
+| Prop        | Type               | Default        | Description            |
+| ----------- | ------------------ | -------------- | ---------------------- |
+| `height`    | `number \| string` | `40`           | Skeleton height        |
+| `width`     | `number \| string` | `'100%'`       | Skeleton width         |
+| `animate`   | `boolean`          | `true`         | Enable pulse animation |
+| `ariaLabel` | `string`           | `'Loading...'` | Screen reader label    |
+| `className` | `string`           | -              | CSS class              |
+| `style`     | `CSSProperties`    | -              | Inline styles          |
 
 ### Hooks
 
@@ -380,18 +376,18 @@ const teya = useTeyaBlocks();
 Returns the SDK instance along with loading and error state.
 
 ```jsx
-const {teya, loading, error, isReady} = useTeyaBlocksLoader();
+const { teya, loading, error, isReady } = useTeyaBlocksLoader();
 
 if (loading) return <Spinner />;
 if (error) return <p>Failed to load: {error.message}</p>;
 ```
 
-| Return Value | Type | Description |
-|-------------|------|-------------|
-| `teya` | `TeyaBlocks \| null` | SDK instance |
-| `loading` | `boolean` | Whether SDK is loading |
-| `error` | `Error \| null` | Error if SDK failed to load |
-| `isReady` | `boolean` | `true` when SDK is loaded |
+| Return Value | Type                 | Description                 |
+| ------------ | -------------------- | --------------------------- |
+| `teya`       | `TeyaBlocks \| null` | SDK instance                |
+| `loading`    | `boolean`            | Whether SDK is loading      |
+| `error`      | `Error \| null`      | Error if SDK failed to load |
+| `isReady`    | `boolean`            | `true` when SDK is loaded   |
 
 ---
 
@@ -400,7 +396,7 @@ if (error) return <p>Failed to load: {error.message}</p>;
 Hook for programmatic control of the checkout element.
 
 ```jsx
-const {checkoutRef, submitPayment} = useCheckout({
+const { checkoutRef, submitPayment } = useCheckout({
   onSuccess: (response, method) => console.log('Paid via', method),
   onError: (error, method) => console.error('Failed via', method),
 });
@@ -420,8 +416,8 @@ return (
 Hook for programmatic control of the card element.
 
 ```jsx
-const {cardElementRef, submitPayment} = useCardElement({
-  options: {hidePostalCode: true},
+const { cardElementRef, submitPayment } = useCardElement({
+  options: { hidePostalCode: true },
   onSuccess: (response) => console.log('Paid:', response),
   onError: (error) => console.error('Failed:', error),
 });
@@ -441,8 +437,8 @@ return (
 Hook for programmatic Apple Pay integration.
 
 ```jsx
-const {applePayElementRef, isAvailable, submit} = useApplePay({
-  options: {buttonType: 'buy', buttonColor: 'black'},
+const { applePayElementRef, isAvailable, submit } = useApplePay({
+  options: { buttonType: 'buy', buttonColor: 'black' },
   onPaymentCompleted: (result) => console.log('Payment:', result),
   onError: (error) => console.error(error),
 });
@@ -452,11 +448,11 @@ if (isAvailable === false) return null;
 return <div ref={applePayElementRef} />;
 ```
 
-| Return Value | Type | Description |
-|-------------|------|-------------|
-| `applePayElementRef` | `RefObject<HTMLDivElement>` | Attach to container div |
-| `isAvailable` | `boolean \| null` | `null` = checking, `true` = available, `false` = unavailable |
-| `submit` | `(request) => Promise<ApplePayPaymentResult>` | Submit with payment request |
+| Return Value         | Type                                          | Description                                                  |
+| -------------------- | --------------------------------------------- | ------------------------------------------------------------ |
+| `applePayElementRef` | `RefObject<HTMLDivElement>`                   | Attach to container div                                      |
+| `isAvailable`        | `boolean \| null`                             | `null` = checking, `true` = available, `false` = unavailable |
+| `submit`             | `(request) => Promise<ApplePayPaymentResult>` | Submit with payment request                                  |
 
 ---
 
@@ -471,11 +467,11 @@ import {
   useCardCvcElement,
 } from '@teya-blocks/react';
 
-const {cardNumberElementRef} = useCardNumberElement({
+const { cardNumberElementRef } = useCardNumberElement({
   onChange: (e) => console.log('Number changed:', e),
 });
-const {cardExpiryElementRef} = useCardExpiryElement();
-const {cardCvcElementRef} = useCardCvcElement();
+const { cardExpiryElementRef } = useCardExpiryElement();
+const { cardCvcElementRef } = useCardCvcElement();
 
 return (
   <div>
@@ -496,7 +492,7 @@ Handle session token expiration with the `onTokenRefresh` callback:
 <CheckoutElement
   onTokenRefresh={async () => {
     const response = await fetch('/api/create-checkout-session');
-    const {sessionToken} = await response.json();
+    const { sessionToken } = await response.json();
     return sessionToken;
   }}
   onSuccess={(response) => console.log('Paid:', response)}
@@ -524,7 +520,7 @@ const checkoutRef = useRef(null);
 
 ```jsx
 <PaymentErrorBoundary
-  fallback={({error, resetError}) => (
+  fallback={({ error, resetError }) => (
     <div className="error-container">
       <p>Something went wrong: {error.message}</p>
       <button onClick={resetError}>Try again</button>
@@ -545,7 +541,7 @@ This package includes TypeScript declarations. All types are exported:
 
 ```tsx
 import type {
-  // SDK types (re-exported from @teya/teya-blocks-js)
+  // SDK types
   TeyaBlocks,
   TeyaBlocksOptions,
   CardElementOptions,

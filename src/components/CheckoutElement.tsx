@@ -9,7 +9,7 @@ import type {
   PaymentSubmitResponse,
   PaymentSubmitError,
   CheckoutPaymentMethod,
-  CoreCheckoutElement,
+  CheckoutElement as CoreCheckoutElement,
 } from '../types';
 
 export interface CheckoutElementRef {
@@ -196,7 +196,9 @@ export const CheckoutElement = forwardRef<CheckoutElementRef, CheckoutElementPro
     useImperativeHandle(ref, () => ({
       submitPayment: async () => {
         if (!checkoutElementRef.current) {
-          throw new Error('[Teya Blocks] Checkout element not initialized. Ensure the component is mounted before calling submitPayment.');
+          throw new Error(
+            '[Teya Blocks] Checkout element not initialized. Ensure the component is mounted before calling submitPayment.'
+          );
         }
         return checkoutElementRef.current.submitPayment();
       },
@@ -211,9 +213,10 @@ export const CheckoutElement = forwardRef<CheckoutElementRef, CheckoutElementPro
           setIsLoading(false);
           callbacksRef.current.onReady?.();
         },
-        onChange: (e) => callbacksRef.current.onChange?.(e),
-        onSuccess: (response, method) => callbacksRef.current.onSuccess?.(response, method),
-        onError: (error, method) => {
+        onChange: (e: ElementChangeEvent) => callbacksRef.current.onChange?.(e),
+        onSuccess: (response: PaymentSubmitResponse, method: CheckoutPaymentMethod) =>
+          callbacksRef.current.onSuccess?.(response, method),
+        onError: (error: PaymentSubmitError, method: CheckoutPaymentMethod) => {
           if (callbacksRef.current.onError) {
             callbacksRef.current.onError(error, method);
           } else {
@@ -222,13 +225,15 @@ export const CheckoutElement = forwardRef<CheckoutElementRef, CheckoutElementPro
         },
         cardContainerStyle: cssPropertiesToRecord(containerStyles?.card ?? cardStyle),
         applePayContainerStyle: cssPropertiesToRecord(containerStyles?.applePay ?? applePayStyle),
-        onTokenRefresh: (onTokenRefresh || options?.onTokenRefresh)
-          ? async () => {
-              const refreshFn = callbacksRef.current.onTokenRefresh;
-              if (!refreshFn) throw new Error('[Teya Blocks] onTokenRefresh callback not provided');
-              return refreshFn();
-            }
-          : undefined,
+        onTokenRefresh:
+          onTokenRefresh || options?.onTokenRefresh
+            ? async () => {
+                const refreshFn = callbacksRef.current.onTokenRefresh;
+                if (!refreshFn)
+                  throw new Error('[Teya Blocks] onTokenRefresh callback not provided');
+                return refreshFn();
+              }
+            : undefined,
         submitButtonProps: submitButtonProps
           ? {
               ...submitButtonProps,

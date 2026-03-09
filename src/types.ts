@@ -1,24 +1,52 @@
+export { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
+
 export type {
   TeyaBlocks,
   TeyaBlocksOptions,
+  ElementsFactory,
+  ElementType,
+  SubmitPaymentOptions,
+  Appearance,
+  AppearanceRules,
+  ThemeVariables,
+  FontFamily,
+  Locale,
+  ThemePresetName,
+  CSSProperties,
+  BaseElement,
+  CardElement,
   CardElementOptions,
+  CardElementRef,
+  CardNumberElement,
+  CardNumberElementOptions,
+  CardExpiryElement,
+  CardExpiryElementOptions,
+  CardCvcElement,
+  CardCvcElementOptions,
+  CheckoutElement,
   CheckoutElementOptions,
+  CheckoutElementRef,
+  CheckoutPaymentMethod,
+  SubmitButtonProps,
+  ApplePayElement,
   ApplePayElementOptions,
   ApplePayPaymentRequest,
   ApplePayPaymentResult,
   ApplePayChangeEvent,
+  ApplePayContactField,
+  ApplePayMerchantCapability,
+  ApplePayShippingType,
+  ApplePayShippingContactEditingMode,
+  ApplePayPaymentContact,
+  ApplePayLineItem,
+  ApplePayRecurringPaymentRequest,
+  ElementReadyEvent,
   ElementChangeEvent,
+  ElementErrorEvent,
+  PaymentCompletedEvent,
   PaymentSubmitResponse,
   PaymentSubmitError,
-  CheckoutPaymentMethod,
-  SubmitButtonProps,
-} from '@teya/teya-blocks-js';
-
-export type {
-  CardElement as CoreCardElement,
-  CheckoutElement as CoreCheckoutElement,
-  ApplePayElement as CoreApplePayElement,
-} from '@teya/teya-blocks-js';
+} from '@teyaproduct/teya-blocks-js';
 
 /**
  * Base element options shared by all element types

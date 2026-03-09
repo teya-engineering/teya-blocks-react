@@ -1,5 +1,5 @@
 {
-  "name": "teya-blocks-react",
+  "name": "@teya-blocks/react",
   "version": "1.0.0",
   "description": "React components for Teya Blocks payment SDK",
   "type": "module",
@@ -44,7 +44,6 @@
   "author": "Teya",
   "license": "Apache-2.0",
   "peerDependencies": {
-    "@teya/teya-blocks-js": "^1.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
@@ -52,7 +51,6 @@
     "@changesets/cli": "^2.27.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
-    "@teya/teya-blocks-js": "^1.0.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitest/coverage-v8": "^4.0.18",
@@ -65,5 +63,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@teyaproduct/teya-blocks-js": "^0.0.2"
   }
 }

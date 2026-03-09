@@ -1,3 +1,5 @@
+export { initTeyaBlocks } from './types';
+
 export { TeyaBlocksProvider } from './context/TeyaBlocksContext';
 export type { TeyaBlocksProviderProps } from './context/TeyaBlocksContext';
 
@@ -43,19 +45,45 @@ export type {
 } from './components/PaymentErrorBoundary';
 export type { LoadingSkeletonProps } from './components/LoadingSkeleton';
 
+// Core SDK types (same as @teyaproduct/teya-blocks-js)
 export type {
   TeyaBlocks,
   TeyaBlocksOptions,
+  ElementsFactory,
+  ElementType,
+  SubmitPaymentOptions,
+  Appearance,
+  AppearanceRules,
+  ThemeVariables,
+  FontFamily,
+  Locale,
+  ThemePresetName,
+  CSSProperties,
+  BaseElement,
   CardElementOptions,
+  CardNumberElementOptions,
+  CardExpiryElementOptions,
+  CardCvcElementOptions,
   CheckoutElementOptions,
+  CheckoutPaymentMethod,
+  SubmitButtonProps,
   ApplePayElementOptions,
   ApplePayPaymentRequest,
   ApplePayPaymentResult,
+  ApplePayChangeEvent,
+  ApplePayContactField,
+  ApplePayMerchantCapability,
+  ApplePayShippingType,
+  ApplePayShippingContactEditingMode,
+  ApplePayPaymentContact,
+  ApplePayLineItem,
+  ApplePayRecurringPaymentRequest,
+  ElementReadyEvent,
   ElementChangeEvent,
+  ElementErrorEvent,
+  PaymentCompletedEvent,
   PaymentSubmitResponse,
   PaymentSubmitError,
-  CheckoutPaymentMethod,
-  SubmitButtonProps,
 } from './types';
 
 export type { Block, ElementOptions } from './types';

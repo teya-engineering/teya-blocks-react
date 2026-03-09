@@ -1,10 +1,6 @@
-import React, { useMemo, useRef } from 'react';
-import { loadTeyaBlocks } from '@teya/teya-blocks-js';
-import {
-  TeyaBlocksProvider,
-  CheckoutElement,
-  PaymentErrorBoundary,
-} from '@teya-blocks/react';
+import { useMemo, useRef } from 'react';
+import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
+import { TeyaBlocksProvider, CheckoutElement, PaymentErrorBoundary } from '@teya-blocks/react';
 import type { CheckoutElementRef } from '@teya-blocks/react';
 
 /**
@@ -17,10 +13,7 @@ import type { CheckoutElementRef } from '@teya-blocks/react';
 // --- Basic usage with built-in submit button ---
 
 export function BasicCheckout({ sessionToken }: { sessionToken: string }) {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks(sessionToken),
-    [sessionToken]
-  );
+  const teyaPromise = useMemo(() => initTeyaBlocks(sessionToken), [sessionToken]);
 
   return (
     <TeyaBlocksProvider teya={teyaPromise}>
@@ -38,15 +31,8 @@ export function BasicCheckout({ sessionToken }: { sessionToken: string }) {
 
 // --- Custom submit button ---
 
-export function CustomSubmitCheckout({
-  sessionToken,
-}: {
-  sessionToken: string;
-}) {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks(sessionToken),
-    [sessionToken]
-  );
+export function CustomSubmitCheckout({ sessionToken }: { sessionToken: string }) {
+  const teyaPromise = useMemo(() => initTeyaBlocks(sessionToken), [sessionToken]);
   const checkoutRef = useRef<CheckoutElementRef>(null);
 
   const handleSubmit = async () => {
@@ -78,10 +64,7 @@ export function CustomSubmitCheckout({
 // --- With token refresh and container styles ---
 
 export function FullCheckout({ sessionToken }: { sessionToken: string }) {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks(sessionToken),
-    [sessionToken]
-  );
+  const teyaPromise = useMemo(() => initTeyaBlocks(sessionToken), [sessionToken]);
   const checkoutRef = useRef<CheckoutElementRef>(null);
 
   return (
@@ -116,9 +99,7 @@ export function FullCheckout({ sessionToken }: { sessionToken: string }) {
             return sessionToken;
           }}
         />
-        <button onClick={() => checkoutRef.current?.submitPayment()}>
-          Pay Now
-        </button>
+        <button onClick={() => checkoutRef.current?.submitPayment()}>Pay Now</button>
       </PaymentErrorBoundary>
     </TeyaBlocksProvider>
   );

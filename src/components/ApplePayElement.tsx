@@ -8,7 +8,7 @@ import type {
   ApplePayPaymentResult,
   ApplePayChangeEvent,
   Block,
-  CoreApplePayElement as ApplePayElementClass,
+  ApplePayElement as ApplePayElementClass,
 } from '../types';
 
 export interface ApplePayElementProps {

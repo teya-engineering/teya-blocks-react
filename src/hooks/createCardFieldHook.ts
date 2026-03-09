@@ -3,7 +3,7 @@ import { useTeyaBlocksLoader } from './useTeyaBlocks';
 import { useStableOptions } from './useStableOptions';
 import { useCallbackRefs } from './useCallbackRefs';
 import type { ElementChangeEvent } from '../types';
-import type { BaseElement } from '@teya/teya-blocks-js';
+import type { BaseElement } from '../types';
 
 export interface CardFieldHookOptions {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- generic factory; specific types applied by consumers
@@ -15,7 +15,7 @@ export interface CardFieldHookOptions {
 }
 
 export interface CardFieldHookResult {
-  elementRef: RefObject<HTMLDivElement>;
+  elementRef: RefObject<HTMLDivElement | null>;
 }
 
 interface CardFieldHookConfig {

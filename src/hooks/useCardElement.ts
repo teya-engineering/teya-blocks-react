@@ -7,7 +7,7 @@ import type {
   ElementChangeEvent,
   PaymentSubmitResponse,
   PaymentSubmitError,
-  CoreCardElement,
+  CardElement as CoreCardElement,
 } from '../types';
 
 export interface UseCardElementOptions {
@@ -54,7 +54,7 @@ export interface UseCardElementResult {
  */
 export function useCardElement(config?: UseCardElementOptions): UseCardElementResult {
   const { teya } = useTeyaBlocksLoader();
-  const cardElementRef = useRef<HTMLDivElement>(null);
+  const cardElementRef = useRef<HTMLDivElement>(null) as RefObject<HTMLDivElement>;
   const elementRef = useRef<CoreCardElement | null>(null);
 
   const callbacksRef = useCallbackRefs({

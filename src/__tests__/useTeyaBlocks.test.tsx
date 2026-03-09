@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { TeyaBlocksProvider } from '../context/TeyaBlocksContext';
 import { useTeyaBlocks, useTeyaBlocksLoader } from '../hooks/useTeyaBlocks';
-import type { TeyaBlocks } from '@teya/teya-blocks-js';
+import type { TeyaBlocks } from '@teyaproduct/teya-blocks-js';
 import type { ReactNode } from 'react';
 
 const mockTeya = { elements: { create: () => ({}) } } as unknown as TeyaBlocks;

@@ -7,7 +7,7 @@ import type {
   ApplePayPaymentRequest,
   ApplePayPaymentResult,
   ApplePayChangeEvent,
-  CoreApplePayElement as ApplePayElement,
+  ApplePayElement,
 } from '../types';
 
 export interface UseApplePayOptions {
@@ -51,7 +51,7 @@ export interface UseApplePayResult {
   /**
    * Ref to attach to your container element
    */
-  applePayElementRef: RefObject<HTMLDivElement>;
+  applePayElementRef: RefObject<HTMLDivElement | null>;
 
   /**
    * Whether Apple Pay is available on this device

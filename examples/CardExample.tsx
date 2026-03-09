@@ -1,10 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { loadTeyaBlocks } from '@teya/teya-blocks-js';
-import {
-  TeyaBlocksProvider,
-  CardElement,
-  PaymentErrorBoundary,
-} from '@teya-blocks/react';
+import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
+import { TeyaBlocksProvider, CardElement, PaymentErrorBoundary } from '@teya-blocks/react';
 import type { CardElementRef } from '@teya-blocks/react';
 
 /**
@@ -17,10 +13,7 @@ import type { CardElementRef } from '@teya-blocks/react';
 // --- Basic card payment ---
 
 export function BasicCard({ sessionToken }: { sessionToken: string }) {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks(sessionToken),
-    [sessionToken]
-  );
+  const teyaPromise = useMemo(() => initTeyaBlocks(sessionToken), [sessionToken]);
   const cardRef = useRef<CardElementRef>(null);
 
   return (
@@ -37,15 +30,8 @@ export function BasicCard({ sessionToken }: { sessionToken: string }) {
 
 // --- Card with form validation and loading state ---
 
-export function CardWithValidation({
-  sessionToken,
-}: {
-  sessionToken: string;
-}) {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks(sessionToken),
-    [sessionToken]
-  );
+export function CardWithValidation({ sessionToken }: { sessionToken: string }) {
+  const teyaPromise = useMemo(() => initTeyaBlocks(sessionToken), [sessionToken]);
   const cardRef = useRef<CardElementRef>(null);
   const [isComplete, setIsComplete] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,7 +56,7 @@ export function CardWithValidation({
       <form onSubmit={handleSubmit}>
         <CardElement
           ref={cardRef}
-          options={{ hidePostalCode: true }}
+          options={{ showAcceptedBrands: true }}
           onReady={() => console.log('Card element ready')}
           onChange={(event) => setIsComplete(event.complete)}
           onFocus={() => console.log('Card focused')}
@@ -92,15 +78,8 @@ export function CardWithValidation({
 
 // --- Card with token refresh and error boundary ---
 
-export function CardWithTokenRefresh({
-  sessionToken,
-}: {
-  sessionToken: string;
-}) {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks(sessionToken),
-    [sessionToken]
-  );
+export function CardWithTokenRefresh({ sessionToken }: { sessionToken: string }) {
+  const teyaPromise = useMemo(() => initTeyaBlocks(sessionToken), [sessionToken]);
   const cardRef = useRef<CardElementRef>(null);
 
   return (
