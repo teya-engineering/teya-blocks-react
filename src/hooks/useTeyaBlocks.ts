@@ -1,4 +1,4 @@
-import type { TeyaBlocks } from '@teya/teya-blocks-js';
+import type { TeyaBlocks } from '@teyaproduct/teya-blocks-js';
 import { useTeyaBlocksContext } from '../context/TeyaBlocksContext';
 
 /**

@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { loadTeyaBlocks } from '@teya/teya-blocks-js';
+import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
 import {
   TeyaBlocksProvider,
   CardNumberElement,
   CardExpiryElement,
   CardCvcElement,
-} from '@teya-blocks/react';
+} from '@teyaproduct/teya-blocks-react';
 
 /**
  * Individual Card Field Examples
@@ -18,31 +18,22 @@ import {
 // --- Basic split card fields ---
 
 export function BasicCardFields({ sessionToken }: { sessionToken: string }) {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks(sessionToken),
-    [sessionToken]
-  );
+  const teyaPromise = useMemo(() => initTeyaBlocks(sessionToken), [sessionToken]);
 
   return (
     <TeyaBlocksProvider teya={teyaPromise}>
       <div>
         <label>Card Number</label>
-        <CardNumberElement
-          onChange={(e) => console.log('Number:', e)}
-        />
+        <CardNumberElement onChange={(e) => console.log('Number:', e)} />
 
         <div style={{ display: 'flex', gap: '12px' }}>
           <div style={{ flex: 1 }}>
             <label>Expiry</label>
-            <CardExpiryElement
-              onChange={(e) => console.log('Expiry:', e)}
-            />
+            <CardExpiryElement onChange={(e) => console.log('Expiry:', e)} />
           </div>
           <div style={{ flex: 1 }}>
             <label>CVC</label>
-            <CardCvcElement
-              onChange={(e) => console.log('CVC:', e)}
-            />
+            <CardCvcElement onChange={(e) => console.log('CVC:', e)} />
           </div>
         </div>
       </div>
@@ -53,10 +44,7 @@ export function BasicCardFields({ sessionToken }: { sessionToken: string }) {
 // --- Styled card fields with validation state ---
 
 export function StyledCardFields({ sessionToken }: { sessionToken: string }) {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks(sessionToken),
-    [sessionToken]
-  );
+  const teyaPromise = useMemo(() => initTeyaBlocks(sessionToken), [sessionToken]);
 
   const [fieldState, setFieldState] = useState({
     number: { complete: false, focused: false },
@@ -75,9 +63,7 @@ export function StyledCardFields({ sessionToken }: { sessionToken: string }) {
     <TeyaBlocksProvider teya={teyaPromise}>
       <div style={{ maxWidth: '400px' }}>
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px' }}>
-            Card Number
-          </label>
+          <label style={{ display: 'block', marginBottom: '4px' }}>Card Number</label>
           <CardNumberElement
             style={fieldStyle('number')}
             onChange={(e) =>
@@ -103,9 +89,7 @@ export function StyledCardFields({ sessionToken }: { sessionToken: string }) {
 
         <div style={{ display: 'flex', gap: '12px' }}>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: '4px' }}>
-              Expiry Date
-            </label>
+            <label style={{ display: 'block', marginBottom: '4px' }}>Expiry Date</label>
             <CardExpiryElement
               style={fieldStyle('expiry')}
               onChange={(e) =>
@@ -129,9 +113,7 @@ export function StyledCardFields({ sessionToken }: { sessionToken: string }) {
             />
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: '4px' }}>
-              CVC
-            </label>
+            <label style={{ display: 'block', marginBottom: '4px' }}>CVC</label>
             <CardCvcElement
               style={fieldStyle('cvc')}
               onChange={(e) =>
@@ -157,9 +139,7 @@ export function StyledCardFields({ sessionToken }: { sessionToken: string }) {
         </div>
 
         <p style={{ fontSize: '14px', color: '#666', marginTop: '12px' }}>
-          {fieldState.number.complete &&
-          fieldState.expiry.complete &&
-          fieldState.cvc.complete
+          {fieldState.number.complete && fieldState.expiry.complete && fieldState.cvc.complete
             ? 'All fields complete'
             : 'Please fill in all card details'}
         </p>

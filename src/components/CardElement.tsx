@@ -9,7 +9,7 @@ import type {
   PaymentSubmitResponse,
   PaymentSubmitError,
   Block,
-  CoreCardElement,
+  CardElement as CoreCardElement,
 } from '../types';
 
 /**

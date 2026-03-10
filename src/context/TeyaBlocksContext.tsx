@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import type { TeyaBlocks } from '@teya/teya-blocks-js';
+import type { TeyaBlocks } from '@teyaproduct/teya-blocks-js';
 
 interface TeyaBlocksContextValue {
   teya: TeyaBlocks | null;
@@ -15,7 +15,7 @@ const TeyaBlocksContext = createContext<TeyaBlocksContextValue>({
 
 export interface TeyaBlocksProviderProps {
   /**
-   * TeyaBlocks instance or Promise from loadTeyaBlocks()
+   * TeyaBlocks instance or Promise from initTeyaBlocks()
    */
   teya: TeyaBlocks | Promise<TeyaBlocks | null> | null;
   /**
@@ -29,10 +29,10 @@ export interface TeyaBlocksProviderProps {
  *
  * @example
  * ```tsx
- * import { loadTeyaBlocks } from '@teya/teya-blocks-js';
- * import { TeyaBlocksProvider, CardElement } from '@teya-blocks/react';
+ * import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
+ * import { TeyaBlocksProvider, CardElement } from '@teyaproduct/teya-blocks-react';
  *
- * const teya = loadTeyaBlocks('pk_live_xxx');
+ * const teya = initTeyaBlocks('pk_live_xxx');
  *
  * function App() {
  *   return (
@@ -83,9 +83,7 @@ export function TeyaBlocksProvider({ teya, children }: TeyaBlocksProviderProps) 
     };
   }, [teya]);
 
-  return (
-    <TeyaBlocksContext.Provider value={state}>{children}</TeyaBlocksContext.Provider>
-  );
+  return <TeyaBlocksContext.Provider value={state}>{children}</TeyaBlocksContext.Provider>;
 }
 
 /**

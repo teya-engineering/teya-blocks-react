@@ -7,7 +7,7 @@ import type {
   PaymentSubmitResponse,
   PaymentSubmitError,
   ElementChangeEvent,
-  CoreCheckoutElement as CheckoutElement,
+  CheckoutElement,
   SubmitButtonProps,
 } from '../types';
 
@@ -89,7 +89,7 @@ export interface UseCheckoutResult {
  */
 export function useCheckout(config?: UseCheckoutOptions): UseCheckoutResult {
   const { teya } = useTeyaBlocksLoader();
-  const checkoutRef = useRef<HTMLDivElement>(null);
+  const checkoutRef = useRef<HTMLDivElement>(null) as RefObject<HTMLDivElement>;
   const elementRef = useRef<CheckoutElement | null>(null);
 
   const checkoutOptions = useMemo(

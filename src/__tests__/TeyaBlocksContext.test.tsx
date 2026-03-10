@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import { TeyaBlocksProvider } from '../context/TeyaBlocksContext';
 import { useTeyaBlocksLoader } from '../hooks/useTeyaBlocks';
-import type { TeyaBlocks } from '@teya/teya-blocks-js';
+import type { TeyaBlocks } from '@teyaproduct/teya-blocks-js';
 
 // Helper component that exposes context values for testing
 function ContextConsumer() {
@@ -48,7 +48,9 @@ describe('TeyaBlocksProvider', () => {
 
   it('resolves Promise and updates state', async () => {
     let resolve!: (value: TeyaBlocks) => void;
-    const promise = new Promise<TeyaBlocks>((r) => { resolve = r; });
+    const promise = new Promise<TeyaBlocks>((r) => {
+      resolve = r;
+    });
 
     renderWithProvider(promise);
     expect(screen.getByTestId('loading')).toHaveTextContent('true');
@@ -65,7 +67,9 @@ describe('TeyaBlocksProvider', () => {
 
   it('captures error when Promise rejects', async () => {
     let reject!: (reason: Error) => void;
-    const promise = new Promise<TeyaBlocks>((_, r) => { reject = r; });
+    const promise = new Promise<TeyaBlocks>((_, r) => {
+      reject = r;
+    });
 
     renderWithProvider(promise);
     expect(screen.getByTestId('loading')).toHaveTextContent('true');
@@ -82,7 +86,9 @@ describe('TeyaBlocksProvider', () => {
 
   it('captures non-Error rejection', async () => {
     let reject!: (reason: unknown) => void;
-    const promise = new Promise<TeyaBlocks>((_, r) => { reject = r; });
+    const promise = new Promise<TeyaBlocks>((_, r) => {
+      reject = r;
+    });
 
     renderWithProvider(promise);
 
@@ -103,7 +109,9 @@ describe('TeyaBlocksProvider', () => {
 
   it('handles Promise that resolves to null', async () => {
     let resolve!: (value: TeyaBlocks | null) => void;
-    const promise = new Promise<TeyaBlocks | null>((r) => { resolve = r; });
+    const promise = new Promise<TeyaBlocks | null>((r) => {
+      resolve = r;
+    });
 
     renderWithProvider(promise);
 

@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { TeyaBlocksProvider } from '../context/TeyaBlocksContext';
 import { CardElement } from '../components/CardElement';
 import { createMockBlock, createMockTeya } from './mocks';
-import type { TeyaBlocks } from '@teya/teya-blocks-js';
+import type { TeyaBlocks } from '@teyaproduct/teya-blocks-js';
 import type { ReactNode } from 'react';
 
 function createWrapper(teya: TeyaBlocks | null) {
@@ -78,7 +78,9 @@ describe('CardElement', () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const mockTeya = {
       elements: {
-        create: vi.fn(() => { throw new Error('SDK error'); }),
+        create: vi.fn(() => {
+          throw new Error('SDK error');
+        }),
       },
     };
 
@@ -97,7 +99,8 @@ describe('CardElement', () => {
   it('passes options to SDK create call', () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
-    const options = { hidePostalCode: true };
+    // Replace with a valid CardElementOptions property, e.g., style
+    const options = { appearance: { theme: 'default' as const } };
 
     render(<CardElement options={options} />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
@@ -105,7 +108,7 @@ describe('CardElement', () => {
 
     expect(mockTeya.elements.create).toHaveBeenCalledWith(
       'card',
-      expect.objectContaining({ hidePostalCode: true })
+      expect.objectContaining({ appearance: { theme: 'default' } })
     );
   });
 

@@ -1,10 +1,6 @@
-import React, { useMemo } from 'react';
-import { loadTeyaBlocks } from '@teya/teya-blocks-js';
-import {
-  TeyaBlocksProvider,
-  ApplePayElement,
-  useApplePay,
-} from '@teya-blocks/react';
+import { useMemo } from 'react';
+import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
+import { TeyaBlocksProvider, ApplePayElement, useApplePay } from '@teyaproduct/teya-blocks-react';
 
 /**
  * Apple Pay Examples
@@ -16,15 +12,12 @@ import {
 // --- Basic Apple Pay with auto-submit ---
 
 export function BasicApplePay({ sessionToken }: { sessionToken: string }) {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks(sessionToken),
-    [sessionToken]
-  );
+  const teyaPromise = useMemo(() => initTeyaBlocks(sessionToken), [sessionToken]);
 
   return (
     <TeyaBlocksProvider teya={teyaPromise}>
       <ApplePayElement
-        options={{ buttonType: 'buy', buttonColor: 'black' }}
+        options={{ buttonType: 'buy', buttonStyle: 'black' }}
         paymentRequest={{
           countryCode: 'US',
           currencyCode: 'USD',
@@ -45,15 +38,12 @@ export function BasicApplePay({ sessionToken }: { sessionToken: string }) {
 // --- Apple Pay with all callbacks ---
 
 export function DetailedApplePay({ sessionToken }: { sessionToken: string }) {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks(sessionToken),
-    [sessionToken]
-  );
+  const teyaPromise = useMemo(() => initTeyaBlocks(sessionToken), [sessionToken]);
 
   return (
     <TeyaBlocksProvider teya={teyaPromise}>
       <ApplePayElement
-        options={{ buttonType: 'pay', buttonColor: 'white-outline' }}
+        options={{ buttonType: 'pay', buttonStyle: 'white-outline' }}
         paymentRequest={{
           countryCode: 'GB',
           currencyCode: 'GBP',
@@ -78,7 +68,7 @@ export function DetailedApplePay({ sessionToken }: { sessionToken: string }) {
 
 function ApplePayHookForm() {
   const { applePayElementRef, isAvailable, submit } = useApplePay({
-    options: { buttonType: 'buy', buttonColor: 'black' },
+    options: { buttonType: 'buy', buttonStyle: 'black' },
     onPaymentCompleted: (result) => {
       console.log('Payment result:', result);
     },
@@ -114,10 +104,7 @@ function ApplePayHookForm() {
 }
 
 export function HookApplePay({ sessionToken }: { sessionToken: string }) {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks(sessionToken),
-    [sessionToken]
-  );
+  const teyaPromise = useMemo(() => initTeyaBlocks(sessionToken), [sessionToken]);
 
   return (
     <TeyaBlocksProvider teya={teyaPromise}>

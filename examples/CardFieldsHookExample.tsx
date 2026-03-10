@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
-import { loadTeyaBlocks } from '@teya/teya-blocks-js';
+import { useMemo } from 'react';
+import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
 import {
   TeyaBlocksProvider,
   useCardNumberElement,
   useCardExpiryElement,
   useCardCvcElement,
-} from '@teya-blocks/react';
+} from '@teyaproduct/teya-blocks-react';
 
 /**
  * Card Fields Hook Example
@@ -50,10 +50,7 @@ function CardFieldsForm() {
 }
 
 export function HookCardFields({ sessionToken }: { sessionToken: string }) {
-  const teyaPromise = useMemo(
-    () => loadTeyaBlocks(sessionToken),
-    [sessionToken]
-  );
+  const teyaPromise = useMemo(() => initTeyaBlocks(sessionToken), [sessionToken]);
 
   return (
     <TeyaBlocksProvider teya={teyaPromise}>

@@ -12,5 +12,5 @@ export default defineConfig({
     moduleSideEffects: false,
   },
   minify: true,
-  external: ['react', 'react-dom', '@teya/teya-blocks-js'],
+  external: ['react', 'react-dom', '@teyaproduct/teya-blocks-js'],
 });
