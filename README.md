@@ -233,7 +233,7 @@ import { ApplePayElement } from '@teyaproduct/teya-blocks-react';
 
 const ApplePay = () => (
   <ApplePayElement
-    options={{ buttonType: 'buy', buttonColor: 'black' }}
+    options={{ buttonType: 'buy', buttonStyle: 'black' }}
     paymentRequest={{
       countryCode: 'US',
       currencyCode: 'USD',
@@ -439,7 +439,7 @@ Hook for programmatic Apple Pay integration.
 
 ```jsx
 const { applePayElementRef, isAvailable, submit } = useApplePay({
-  options: { buttonType: 'buy', buttonColor: 'black' },
+  options: { buttonType: 'buy', buttonStyle: 'black' },
   onPaymentCompleted: (result) => console.log('Payment:', result),
   onError: (error) => console.error(error),
 });
