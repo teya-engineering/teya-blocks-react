@@ -5,7 +5,7 @@ import {
   CardNumberElement,
   CardExpiryElement,
   CardCvcElement,
-} from '@teya-blocks/react';
+} from '@teyaproduct/teya-blocks-react';
 
 /**
  * Individual Card Field Examples

@@ -2,7 +2,7 @@
 
 React components and hooks for [Teya Blocks](https://teya.com) payment integration.
 
-[![npm version](https://img.shields.io/npm/v/%40teya-blocks%2Freact.svg?style=flat-square)](https://www.npmjs.com/package/@teya-blocks/react)
+[![npm version](https://img.shields.io/npm/v/%40teyaproduct%2Fteya-blocks-react.svg?style=flat-square)](https://www.npmjs.com/package/@teyaproduct/teya-blocks-react)
 
 ## Requirements
 
@@ -14,7 +14,7 @@ React components and hooks for [Teya Blocks](https://teya.com) payment integrati
 ### Installation
 
 ```sh
-npm install @teyaproduct/teya-blocks-js @teya-blocks/react
+npm install @teyaproduct/teya-blocks-js @teyaproduct/teya-blocks-react
 ```
 
 ### Minimal Example
@@ -22,7 +22,7 @@ npm install @teyaproduct/teya-blocks-js @teya-blocks/react
 ```jsx
 import { useMemo } from 'react';
 import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
-import { TeyaBlocksProvider, CheckoutElement } from '@teya-blocks/react';
+import { TeyaBlocksProvider, CheckoutElement } from '@teyaproduct/teya-blocks-react';
 
 const App = () => {
   const teyaPromise = useMemo(() => initTeyaBlocks('your_session_token'), []);
@@ -55,7 +55,7 @@ For full control over your payment UI, use the hooks API.
 ```jsx
 import { useMemo } from 'react';
 import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
-import { TeyaBlocksProvider, useCheckout } from '@teya-blocks/react';
+import { TeyaBlocksProvider, useCheckout } from '@teyaproduct/teya-blocks-react';
 
 const App = () => {
   const teyaPromise = useMemo(() => initTeyaBlocks('your_session_token'), []);
@@ -106,7 +106,7 @@ All components and hooks must be wrapped in a `TeyaBlocksProvider`. It accepts a
 
 ```jsx
 import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
-import { TeyaBlocksProvider } from '@teya-blocks/react';
+import { TeyaBlocksProvider } from '@teyaproduct/teya-blocks-react';
 
 const teyaPromise = initTeyaBlocks('your_session_token');
 
@@ -128,7 +128,7 @@ Unified payment form with card and Apple Pay support. This is the recommended wa
 
 ```jsx
 import { useRef } from 'react';
-import { CheckoutElement } from '@teya-blocks/react';
+import { CheckoutElement } from '@teyaproduct/teya-blocks-react';
 
 const PaymentForm = () => {
   const checkoutRef = useRef(null);
@@ -183,7 +183,7 @@ Single card input collecting card number, expiry, and CVC.
 
 ```jsx
 import { useRef } from 'react';
-import { CardElement } from '@teya-blocks/react';
+import { CardElement } from '@teyaproduct/teya-blocks-react';
 
 const CardForm = () => {
   const cardRef = useRef(null);
@@ -229,7 +229,7 @@ const CardForm = () => {
 Renders an Apple Pay button. Automatically hides when Apple Pay is unavailable.
 
 ```jsx
-import { ApplePayElement } from '@teya-blocks/react';
+import { ApplePayElement } from '@teyaproduct/teya-blocks-react';
 
 const ApplePay = () => (
   <ApplePayElement
@@ -275,7 +275,7 @@ import {
   CardNumberElement,
   CardExpiryElement,
   CardCvcElement,
-} from '@teya-blocks/react';
+} from '@teyaproduct/teya-blocks-react';
 
 const CustomCardForm = () => (
   <div>
@@ -315,7 +315,7 @@ All three share the same props:
 Error boundary that catches rendering errors in payment components.
 
 ```jsx
-import { PaymentErrorBoundary, CardElement } from '@teya-blocks/react';
+import { PaymentErrorBoundary, CardElement } from '@teyaproduct/teya-blocks-react';
 
 const SafePayment = () => (
   <PaymentErrorBoundary
@@ -346,7 +346,7 @@ const SafePayment = () => (
 Placeholder component shown while payment elements load. Built-in to `CardElement` and `CheckoutElement`, but also available for custom usage.
 
 ```jsx
-import { LoadingSkeleton } from '@teya-blocks/react';
+import { LoadingSkeleton } from '@teyaproduct/teya-blocks-react';
 
 <LoadingSkeleton height={40} width="100%" ariaLabel="Loading card input" />;
 ```
@@ -466,7 +466,7 @@ import {
   useCardNumberElement,
   useCardExpiryElement,
   useCardCvcElement,
-} from '@teya-blocks/react';
+} from '@teyaproduct/teya-blocks-react';
 
 const { cardNumberElementRef } = useCardNumberElement({
   onChange: (e) => console.log('Number changed:', e),
@@ -573,7 +573,7 @@ import type {
   UseCheckoutResult,
   UseApplePayOptions,
   UseApplePayResult,
-} from '@teya-blocks/react';
+} from '@teyaproduct/teya-blocks-react';
 ```
 
 ## Development

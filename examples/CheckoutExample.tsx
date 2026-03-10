@@ -1,7 +1,11 @@
 import { useMemo, useRef } from 'react';
 import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
-import { TeyaBlocksProvider, CheckoutElement, PaymentErrorBoundary } from '@teya-blocks/react';
-import type { CheckoutElementRef } from '@teya-blocks/react';
+import {
+  TeyaBlocksProvider,
+  CheckoutElement,
+  PaymentErrorBoundary,
+} from '@teyaproduct/teya-blocks-react';
+import type { CheckoutElementRef } from '@teyaproduct/teya-blocks-react';
 
 /**
  * Basic Checkout Example

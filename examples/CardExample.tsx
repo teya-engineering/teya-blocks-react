@@ -1,7 +1,11 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
-import { TeyaBlocksProvider, CardElement, PaymentErrorBoundary } from '@teya-blocks/react';
-import type { CardElementRef } from '@teya-blocks/react';
+import {
+  TeyaBlocksProvider,
+  CardElement,
+  PaymentErrorBoundary,
+} from '@teyaproduct/teya-blocks-react';
+import type { CardElementRef } from '@teyaproduct/teya-blocks-react';
 
 /**
  * Card Element Examples

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
-import { TeyaBlocksProvider, ApplePayElement, useApplePay } from '@teya-blocks/react';
+import { TeyaBlocksProvider, ApplePayElement, useApplePay } from '@teyaproduct/teya-blocks-react';
 
 /**
  * Apple Pay Examples

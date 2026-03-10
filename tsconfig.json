@@ -40,7 +40,7 @@
 
     /* Path Aliases */
     "paths": {
-      "@teya-blocks/react": ["./src/index.ts"]
+      "@teyaproduct/teya-blocks-react": ["./src/index.ts"]
     }
   },
   "include": ["src/**/*", "examples/**/*"],

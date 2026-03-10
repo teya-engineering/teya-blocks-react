@@ -5,7 +5,7 @@ import {
   useCardNumberElement,
   useCardExpiryElement,
   useCardCvcElement,
-} from '@teya-blocks/react';
+} from '@teyaproduct/teya-blocks-react';
 
 /**
  * Card Fields Hook Example

@@ -30,7 +30,7 @@ export interface TeyaBlocksProviderProps {
  * @example
  * ```tsx
  * import { initTeyaBlocks } from '@teyaproduct/teya-blocks-js';
- * import { TeyaBlocksProvider, CardElement } from '@teya-blocks/react';
+ * import { TeyaBlocksProvider, CardElement } from '@teyaproduct/teya-blocks-react';
  *
  * const teya = initTeyaBlocks('pk_live_xxx');
  *
