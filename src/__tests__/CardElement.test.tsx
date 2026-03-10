@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import { TeyaBlocksProvider } from '../context/TeyaBlocksContext';
 import { CardElement } from '../components/CardElement';
 import { createMockBlock, createMockTeya } from './mocks';
