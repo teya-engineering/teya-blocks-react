@@ -1,81 +1,130 @@
-# Contributing to Teya Blocks React
+# Contributing to @teyaproduct/teya-blocks-react
 
-Thank you for your interest in contributing to Teya Blocks React! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing! This guide will help you get started.
 
-## Code of Conduct
+## Prerequisites
 
-Please be respectful and constructive in all interactions. We are committed to providing a welcoming and inclusive environment for everyone.
+- [Node.js](https://nodejs.org/) (v18 or later)
+- npm
 
 ## Getting Started
 
-1. Fork the repository
-2. Clone your fork:
-   ```sh
+1. Fork and clone the repository:
+
+   ```bash
    git clone https://github.com/saltpay/teya-blocks-react.git
    cd teya-blocks-react
    ```
-3. Install dependencies:
-   ```sh
+
+2. Install dependencies:
+
+   ```bash
    npm install
    ```
-4. Create a branch for your changes:
-   ```sh
-   git checkout -b feature/your-feature-name
+
+3. Build the project:
+
+   ```bash
+   npm run build
    ```
 
-## Development Workflow
+## Development
 
-```sh
-npm run dev        # Watch mode for development
-npm run build      # Build CJS + ESM + type declarations
-npm run type-check # TypeScript type checking
-npm run test       # Run tests
-npm run test:watch # Run tests in watch mode
+### Available Scripts
+
+| Command                    | Description                          |
+| -------------------------- | ------------------------------------ |
+| `npm run build`            | Build the project using tsup         |
+| `npm run dev`              | Build in watch mode                  |
+| `npm run type-check`       | Run TypeScript type checking         |
+| `npm run test`             | Run tests                            |
+| `npm run test:watch`       | Run tests in watch mode              |
+| `npm run test:coverage`    | Run tests with coverage              |
+| `npm run clean`            | Remove the `dist/` directory         |
+
+### Project Structure
+
+```
+src/
+├── index.ts              # Public API exports
+├── components/           # React components
+├── hooks/                # React hooks
+├── context/              # TeyaBlocks context/provider
+└── __tests__/            # Tests
 ```
 
-### Before Submitting
+## Making Changes
 
-1. Ensure all tests pass: `npm run test`
-2. Ensure type checking passes: `npm run type-check`
-3. Build successfully: `npm run build`
-4. Add a changeset (see below)
+1. Create a new branch from `main`:
+
+   ```bash
+   git checkout -b your-branch-name
+   ```
+
+2. Make your changes.
+
+3. Ensure your code passes type checks and tests:
+
+   ```bash
+   npm run type-check
+   npm run test
+   ```
+
+4. Add a changeset describing your change:
+
+   ```bash
+   npx changeset
+   ```
+
+   Follow the prompts to select the change type (patch, minor, major) and provide a summary.
+
+5. Commit your changes and push to your fork.
+
+6. Open a pull request against `main`.
 
 ## Changesets
 
-This project uses [changesets](https://github.com/changesets/changesets) for versioning and changelogs. Every PR that changes user-facing behavior must include a changeset.
+This project uses [Changesets](https://github.com/changesets/changesets) for versioning and changelogs. Every PR that affects the published package should include a changeset.
 
-To add a changeset:
+- **patch** — Bug fixes and minor updates
+- **minor** — New features (backwards compatible)
+- **major** — Breaking changes
 
-```sh
-npx changeset
-```
+## Releasing
 
-You will be prompted to select a semver bump type and write a summary. This creates a markdown file in `.changeset/` that should be committed with your PR.
+1. When you're ready to release, run locally:
 
-- **patch** - Bug fixes, dependency updates
-- **minor** - New features, non-breaking changes
-- **major** - Breaking changes
+   ```bash
+   npx changeset version
+   ```
 
-If your change doesn't affect the published package (e.g. docs, tests, CI), you can skip the changeset.
+   This consumes all pending changesets, bumps the version in `package.json`, and updates `CHANGELOG.md`.
 
-## Pull Request Process
+2. Commit and push the version bump:
 
-1. Update documentation if your changes affect the public API.
-2. Add tests for any new functionality.
-3. Include a changeset for user-facing changes.
-4. Ensure all CI checks pass.
-5. Write a clear PR description explaining the **what** and **why** of your changes.
-6. Link any relevant issues.
+   ```bash
+   git add .
+   git commit -m "chore: version packages"
+   git push
+   ```
+3. Notify ecommerce team about the PR in the #team-ecommerce slack channel
+4. Create a **GitHub Release** from the `main` branch. This triggers the CI workflow that builds and publishes the package to npm.
 
-## Reporting Issues
+> **Note:** If your PR doesn't need a release (e.g. docs-only changes), just merge without running `changeset version`. The package won't be published.
 
-When reporting issues, please include:
+## Code Style
 
-- A clear description of the problem
-- Steps to reproduce
-- Expected vs actual behavior
-- Environment details (React version, browser, OS)
+- TypeScript with strict mode enabled
+- Keep the public API minimal and well-typed
+
+## Pull Request Guidelines
+
+- Keep PRs focused on a single change
+- Include a changeset if the change affects the published package
+- Add tests for any new functionality
+- Ensure `npm run type-check` and `npm run test` pass
+- Provide a clear description of what the PR does and why
 
 ## License
 
-By contributing to Teya Blocks React, you agree that your contributions will be licensed under the [Apache License 2.0](LICENSE).
+By contributing, you agree that your contributions will be licensed under the [Apache License 2.0](LICENSE).
