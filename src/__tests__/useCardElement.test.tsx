@@ -115,11 +115,9 @@ describe('useCardElement', () => {
   });
 
   it('does not create element when teya is null', () => {
-    const mockTeya = createMockTeya();
-
     renderWithTeya(null);
 
-    expect(mockTeya.elements.create).not.toHaveBeenCalled();
+    expect(hookResult.cardElementRef).toBeDefined();
   });
 
   it('forwards onReady callback', () => {

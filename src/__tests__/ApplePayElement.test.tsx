@@ -358,7 +358,7 @@ describe('ApplePayElement', () => {
     warnSpy.mockRestore();
   });
 
-  it('logs error during cleanup if destroy throws', () => {
+  it('logs error during cleanup if unmount throws', () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const { block } = createMockBlock();
     block.unmount.mockImplementation(() => {

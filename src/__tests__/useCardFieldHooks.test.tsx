@@ -74,11 +74,9 @@ describe('useCardNumberElement', () => {
   });
 
   it('does not create element when teya is null', () => {
-    const mockTeya = createMockTeya();
-
     renderCardNumber(null);
 
-    expect(mockTeya.elements.create).not.toHaveBeenCalled();
+    expect(cardNumberResult.cardNumberElementRef).toBeDefined();
   });
 
   it('logs error when SDK create fails', () => {
@@ -230,11 +228,9 @@ describe('useCardExpiryElement', () => {
   });
 
   it('does not create element when teya is null', () => {
-    const mockTeya = createMockTeya();
-
     renderCardExpiry(null);
 
-    expect(mockTeya.elements.create).not.toHaveBeenCalled();
+    expect(cardExpiryResult.cardExpiryElementRef).toBeDefined();
   });
 
   it('forwards onReady callback', () => {
@@ -322,11 +318,9 @@ describe('useCardCvcElement', () => {
   });
 
   it('does not create element when teya is null', () => {
-    const mockTeya = createMockTeya();
-
     renderCardCvc(null);
 
-    expect(mockTeya.elements.create).not.toHaveBeenCalled();
+    expect(cardCvcResult.cardCvcElementRef).toBeDefined();
   });
 
   it('forwards onReady callback', () => {

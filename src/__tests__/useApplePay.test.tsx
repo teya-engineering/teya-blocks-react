@@ -100,11 +100,9 @@ describe('useApplePay', () => {
   });
 
   it('does not create element when teya is null', () => {
-    const mockTeya = createMockTeya();
-
     renderWithTeya(null);
 
-    expect(mockTeya.elements.create).not.toHaveBeenCalled();
+    expect(hookResult.applePayElementRef).toBeDefined();
   });
 
   it('logs error when SDK create fails', () => {
