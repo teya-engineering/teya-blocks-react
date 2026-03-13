@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import { createRef } from 'react';
 import { TeyaBlocksProvider } from '../context/TeyaBlocksContext';
-import { CardElement, type CardElementRef } from '../components/CardElement';
+import { CheckoutElement, type CheckoutElementRef } from '../components/CheckoutElement';
 import { createMockBlock, createMockTeya } from './mocks';
 import type { TeyaBlocks } from '@teyaproduct/teya-blocks-js';
 import type { ReactNode } from 'react';
@@ -13,65 +13,65 @@ function createWrapper(teya: TeyaBlocks | null) {
   };
 }
 
-/** Helper to capture the options passed to elements.create */
 function getCreateOptions(mockTeya: ReturnType<typeof createMockTeya>) {
   return mockTeya.elements.create.mock.calls[0]?.[1] as Record<string, any>;
 }
 
-describe('CardElement', () => {
+describe('CheckoutElement', () => {
   it('renders loading skeleton initially', () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
 
-    render(<CardElement />, {
+    render(<CheckoutElement />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
     expect(screen.getByLabelText('Loading card number input')).toBeInTheDocument();
+    expect(screen.getByLabelText('Loading digital wallet buttons')).toBeInTheDocument();
   });
 
-  it('creates and mounts card element when teya is available', () => {
+  it('creates checkout element via SDK', () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
 
-    render(<CardElement />, {
+    render(<CheckoutElement />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
-    expect(mockTeya.elements.create).toHaveBeenCalledWith('card', expect.any(Object));
+    expect(mockTeya.elements.create).toHaveBeenCalledWith('checkout', expect.any(Object));
     expect(block.mount).toHaveBeenCalled();
   });
 
-  it('passes callback options to SDK create call', () => {
+  it('passes callbacks to SDK create call', () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
 
-    render(<CardElement onReady={() => {}} onChange={() => {}} />, {
-      wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
-    });
+    render(
+      <CheckoutElement
+        onReady={() => {}}
+        onChange={() => {}}
+        onSuccess={() => {}}
+        onError={() => {}}
+      />,
+      { wrapper: createWrapper(mockTeya as unknown as TeyaBlocks) }
+    );
 
     expect(mockTeya.elements.create).toHaveBeenCalledWith(
-      'card',
+      'checkout',
       expect.objectContaining({
         onReady: expect.any(Function),
         onChange: expect.any(Function),
+        onSuccess: expect.any(Function),
+        onError: expect.any(Function),
       })
     );
-  });
-
-  it('does not render when teya is null (loading)', () => {
-    render(<CardElement />, {
-      wrapper: createWrapper(null),
-    });
-
-    expect(screen.getByLabelText('Card information')).toBeInTheDocument();
   });
 
   it('cleans up on unmount', () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
 
-    const { unmount } = render(<CardElement />, {
+    const { unmount } = render(<CheckoutElement />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
@@ -89,45 +89,112 @@ describe('CardElement', () => {
       },
     };
 
-    render(<CardElement />, {
+    render(<CheckoutElement />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
     expect(errorSpy).toHaveBeenCalledWith(
-      '[Teya Blocks] Failed to create/mount card element:',
+      '[Teya Blocks] Failed to create/mount checkout element:',
       expect.any(Error)
     );
 
     errorSpy.mockRestore();
   });
 
-  it('passes options to SDK create call', () => {
-    const { block } = createMockBlock();
-    const mockTeya = createMockTeya({ block });
-    const options = { appearance: { theme: 'default' as const } };
-
-    render(<CardElement options={options} />, {
-      wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
-    });
-
-    expect(mockTeya.elements.create).toHaveBeenCalledWith(
-      'card',
-      expect.objectContaining({ appearance: { theme: 'default' } })
-    );
-  });
-
-  it('applies className and style to container', () => {
+  it('applies className and style', () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
 
     const { container } = render(
-      <CardElement className="my-card" style={{ border: '1px solid red' }} />,
+      <CheckoutElement className="checkout" style={{ padding: '20px' }} />,
       { wrapper: createWrapper(mockTeya as unknown as TeyaBlocks) }
     );
 
     const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper).toHaveClass('my-card');
-    expect(wrapper.style.border).toBe('1px solid red');
+    expect(wrapper).toHaveClass('checkout');
+    expect(wrapper.style.padding).toBe('20px');
+  });
+
+  it('exposes submitPayment via ref', async () => {
+    const { block } = createMockBlock();
+    const mockTeya = createMockTeya({ block });
+    const ref = createRef<CheckoutElementRef>();
+
+    render(<CheckoutElement ref={ref} />, {
+      wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
+    });
+
+    expect(ref.current).not.toBeNull();
+    expect(typeof ref.current?.submitPayment).toBe('function');
+  });
+
+  it('throws when submitPayment called before initialization', async () => {
+    const ref = createRef<CheckoutElementRef>();
+
+    render(<CheckoutElement ref={ref} />, {
+      wrapper: createWrapper(null),
+    });
+
+    await expect(ref.current?.submitPayment()).rejects.toThrow(
+      'Checkout element not initialized'
+    );
+  });
+
+  it('does not create element when teya is null', () => {
+    const mockTeya = createMockTeya();
+    render(<CheckoutElement />, {
+      wrapper: createWrapper(null),
+    });
+
+    expect(mockTeya.elements.create).not.toHaveBeenCalled();
+  });
+
+  it('passes containerStyles to SDK', () => {
+    const { block } = createMockBlock();
+    const mockTeya = createMockTeya({ block });
+
+    render(
+      <CheckoutElement
+        containerStyles={{
+          card: { minHeight: '100px' },
+          applePay: { marginTop: '16px' },
+        }}
+      />,
+      { wrapper: createWrapper(mockTeya as unknown as TeyaBlocks) }
+    );
+
+    expect(mockTeya.elements.create).toHaveBeenCalledWith(
+      'checkout',
+      expect.objectContaining({
+        cardContainerStyle: expect.objectContaining({ 'min-height': '100px' }),
+        applePayContainerStyle: expect.objectContaining({ 'margin-top': '16px' }),
+      })
+    );
+  });
+
+  it('passes submitButtonProps to SDK', () => {
+    const { block } = createMockBlock();
+    const mockTeya = createMockTeya({ block });
+
+    render(
+      <CheckoutElement
+        submitButtonProps={{
+          buttonText: 'Pay Now',
+          buttonAmount: '$10.00',
+        }}
+      />,
+      { wrapper: createWrapper(mockTeya as unknown as TeyaBlocks) }
+    );
+
+    expect(mockTeya.elements.create).toHaveBeenCalledWith(
+      'checkout',
+      expect.objectContaining({
+        submitButtonProps: expect.objectContaining({
+          buttonText: 'Pay Now',
+          buttonAmount: '$10.00',
+        }),
+      })
+    );
   });
 
   it('hides loading skeleton when onReady fires', () => {
@@ -135,7 +202,7 @@ describe('CardElement', () => {
     const mockTeya = createMockTeya({ block });
     const onReady = vi.fn();
 
-    render(<CardElement onReady={onReady} />, {
+    render(<CheckoutElement onReady={onReady} />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
@@ -151,7 +218,7 @@ describe('CardElement', () => {
     const mockTeya = createMockTeya({ block });
     const onChange = vi.fn();
 
-    render(<CardElement onChange={onChange} />, {
+    render(<CheckoutElement onChange={onChange} />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
@@ -162,38 +229,20 @@ describe('CardElement', () => {
     expect(onChange).toHaveBeenCalledWith(event);
   });
 
-  it('forwards onFocus and onBlur callbacks', () => {
-    const { block } = createMockBlock();
-    const mockTeya = createMockTeya({ block });
-    const onFocus = vi.fn();
-    const onBlur = vi.fn();
-
-    render(<CardElement onFocus={onFocus} onBlur={onBlur} />, {
-      wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
-    });
-
-    const opts = getCreateOptions(mockTeya);
-    act(() => opts.onFocus());
-    act(() => opts.onBlur());
-
-    expect(onFocus).toHaveBeenCalled();
-    expect(onBlur).toHaveBeenCalled();
-  });
-
   it('forwards onSuccess callback', () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
     const onSuccess = vi.fn();
 
-    render(<CardElement onSuccess={onSuccess} />, {
+    render(<CheckoutElement onSuccess={onSuccess} />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
     const opts = getCreateOptions(mockTeya);
     const response = { status: 'success', paymentId: 'pay_123' };
-    act(() => opts.onSuccess(response));
+    act(() => opts.onSuccess(response, 'CARD'));
 
-    expect(onSuccess).toHaveBeenCalledWith(response);
+    expect(onSuccess).toHaveBeenCalledWith(response, 'CARD');
   });
 
   it('forwards onError callback when provided', () => {
@@ -201,15 +250,15 @@ describe('CardElement', () => {
     const mockTeya = createMockTeya({ block });
     const onError = vi.fn();
 
-    render(<CardElement onError={onError} />, {
+    render(<CheckoutElement onError={onError} />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
     const opts = getCreateOptions(mockTeya);
     const error = { message: 'Payment failed' };
-    act(() => opts.onError(error));
+    act(() => opts.onError(error, 'CARD'));
 
-    expect(onError).toHaveBeenCalledWith(error);
+    expect(onError).toHaveBeenCalledWith(error, 'CARD');
   });
 
   it('logs error when onError not provided', () => {
@@ -217,13 +266,13 @@ describe('CardElement', () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
 
-    render(<CardElement />, {
+    render(<CheckoutElement />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
     const opts = getCreateOptions(mockTeya);
     const error = { message: 'Payment failed' };
-    act(() => opts.onError(error));
+    act(() => opts.onError(error, 'CARD'));
 
     expect(errorSpy).toHaveBeenCalledWith('[Teya Blocks] Payment error:', error);
     errorSpy.mockRestore();
@@ -232,9 +281,8 @@ describe('CardElement', () => {
   it('includes onTokenRefresh when provided', () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
-    const onTokenRefresh = vi.fn().mockResolvedValue('new-token');
 
-    render(<CardElement onTokenRefresh={onTokenRefresh} />, {
+    render(<CheckoutElement onTokenRefresh={async () => 'new-token'} />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
@@ -246,7 +294,7 @@ describe('CardElement', () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
 
-    render(<CardElement />, {
+    render(<CheckoutElement />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
@@ -254,29 +302,46 @@ describe('CardElement', () => {
     expect(opts.onTokenRefresh).toBeUndefined();
   });
 
-  it('exposes submitPayment via ref', async () => {
+  it('calls onTokenRefresh and returns result', async () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
-    const ref = createRef<CardElementRef>();
+    const onTokenRefresh = vi.fn().mockResolvedValue('refreshed-token');
 
-    render(<CardElement ref={ref} />, {
+    render(<CheckoutElement onTokenRefresh={onTokenRefresh} />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
-    const result = await ref.current!.submitPayment();
-    expect(block.submitPayment).toHaveBeenCalled();
-    expect(result).toEqual({ status: 'success', paymentId: 'pay_123' });
+    const opts = getCreateOptions(mockTeya);
+    const result = await opts.onTokenRefresh();
+
+    expect(onTokenRefresh).toHaveBeenCalled();
+    expect(result).toBe('refreshed-token');
   });
 
-  it('throws when submitPayment called before initialization', async () => {
-    const ref = createRef<CardElementRef>();
+  it('converts submitButtonProps style to kebab-case', () => {
+    const { block } = createMockBlock();
+    const mockTeya = createMockTeya({ block });
 
-    render(<CardElement ref={ref} />, {
-      wrapper: createWrapper(null),
-    });
+    render(
+      <CheckoutElement
+        submitButtonProps={{
+          buttonText: 'Pay',
+          style: { backgroundColor: 'blue', fontSize: 16 },
+        }}
+      />,
+      { wrapper: createWrapper(mockTeya as unknown as TeyaBlocks) }
+    );
 
-    await expect(ref.current!.submitPayment()).rejects.toThrow(
-      'Card element not initialized'
+    expect(mockTeya.elements.create).toHaveBeenCalledWith(
+      'checkout',
+      expect.objectContaining({
+        submitButtonProps: expect.objectContaining({
+          style: expect.objectContaining({
+            'background-color': 'blue',
+            'font-size': '16px',
+          }),
+        }),
+      })
     );
   });
 
@@ -288,15 +353,32 @@ describe('CardElement', () => {
     });
     const mockTeya = createMockTeya({ block });
 
-    const { unmount } = render(<CardElement />, {
+    const { unmount } = render(<CheckoutElement />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
     unmount();
     expect(errorSpy).toHaveBeenCalledWith(
-      '[Teya Blocks] Error during card element cleanup:',
+      '[Teya Blocks] Error during checkout element cleanup:',
       expect.any(Error)
     );
     errorSpy.mockRestore();
+  });
+
+  it('uses deprecated cardStyle when containerStyles.card not provided', () => {
+    const { block } = createMockBlock();
+    const mockTeya = createMockTeya({ block });
+
+    render(
+      <CheckoutElement cardStyle={{ minHeight: '80px' }} />,
+      { wrapper: createWrapper(mockTeya as unknown as TeyaBlocks) }
+    );
+
+    expect(mockTeya.elements.create).toHaveBeenCalledWith(
+      'checkout',
+      expect.objectContaining({
+        cardContainerStyle: expect.objectContaining({ 'min-height': '80px' }),
+      })
+    );
   });
 });
