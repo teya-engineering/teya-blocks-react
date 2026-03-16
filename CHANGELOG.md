@@ -10,7 +10,7 @@
 - Renamed package to `@teyaproduct/teya-blocks-react`
 - Added CI workflow and release automation via GitHub Actions
 - Added usage examples for Card, CardFields, Checkout, and Apple Pay integrations
-- Bumped `@teyaproduct/teya-blocks-js` dependency to `^0.1.0`
+- Bumped `@teyaproduct/teya-blocks-js` dependency to `^0.2.0`
 
 ## 0.0.2
 
