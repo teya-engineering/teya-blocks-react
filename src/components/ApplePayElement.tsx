@@ -5,7 +5,7 @@ import { useCallbackRefs } from '../hooks/useCallbackRefs';
 import type {
   ApplePayElementOptions,
   ApplePayPaymentRequest,
-  ApplePayPaymentResult,
+  PaymentSubmitResponse,
   ApplePayChangeEvent,
   Block,
   ApplePayElement as ApplePayElementClass,
@@ -34,9 +34,9 @@ export interface ApplePayElementProps {
   onClick?: () => void;
 
   /**
-   * Callback when payment is completed (success or failure)
+   * Callback when payment succeeds
    */
-  onPaymentCompleted?: (result: ApplePayPaymentResult) => void | Promise<void>;
+  onSuccess?: (response: PaymentSubmitResponse) => void | Promise<void>;
 
   /**
    * Callback when user cancels Apple Pay
@@ -84,10 +84,8 @@ export interface ApplePayElementProps {
  *     currencyCode: 'USD',
  *     total: { label: 'My Store', amount: '10.00' }
  *   }}
- *   onPaymentCompleted={(result) => {
- *     if (result.status === 'SUCCESS') {
- *       console.log('Payment successful:', result.paymentId);
- *     }
+ *   onSuccess={(response) => {
+ *     console.log('Payment ID:', response.payment_id);
  *   }}
  *   autoSubmit
  * />
@@ -98,7 +96,7 @@ export function ApplePayElement({
   paymentRequest,
   onReady,
   onClick,
-  onPaymentCompleted,
+  onSuccess,
   onCancel,
   onError,
   onChange,
@@ -117,7 +115,7 @@ export function ApplePayElement({
   const callbacksRef = useCallbackRefs({
     onReady,
     onClick,
-    onPaymentCompleted,
+    onSuccess,
     onCancel,
     onError,
     onChange,
@@ -175,9 +173,9 @@ export function ApplePayElement({
             handlePayment(applePayElement as unknown as ApplePayElementClass);
           }
         },
-        onPaymentCompleted: async (result: unknown) => {
+        onSuccess: async (result: unknown) => {
           try {
-            await callbacksRef.current.onPaymentCompleted?.(result as ApplePayPaymentResult);
+            await callbacksRef.current.onSuccess?.(result as PaymentSubmitResponse);
           } catch (error) {
             const err = error instanceof Error ? error : new Error(String(error));
             if (callbacksRef.current.onError) {
@@ -246,7 +244,7 @@ export function ApplePayElement({
 
     try {
       const result = await applePayElement.createPaymentMethod(request);
-      await callbacksRef.current.onPaymentCompleted?.(result);
+      await callbacksRef.current.onSuccess?.(result);
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
       if (callbacksRef.current.onError) {
