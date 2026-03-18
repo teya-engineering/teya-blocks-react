@@ -24,10 +24,8 @@ export function BasicApplePay({ sessionToken }: { sessionToken: string }) {
           total: { label: 'My Store', amount: '10.00' },
         }}
         autoSubmit
-        onPaymentCompleted={(result) => {
-          if (result.status === 'SUCCESS') {
-            console.log('Payment ID:', result.paymentId);
-          }
+        onSuccess={(response) => {
+          console.log('Payment ID:', response.payment_id);
         }}
         onError={(error) => console.error('Apple Pay error:', error)}
       />
@@ -52,7 +50,7 @@ export function DetailedApplePay({ sessionToken }: { sessionToken: string }) {
         autoSubmit
         onReady={() => console.log('Apple Pay button ready')}
         onClick={() => console.log('Apple Pay button clicked')}
-        onPaymentCompleted={(result) => {
+        onSuccess={(result) => {
           console.log('Payment completed:', result);
         }}
         onCancel={() => console.log('User cancelled Apple Pay')}
@@ -69,7 +67,7 @@ export function DetailedApplePay({ sessionToken }: { sessionToken: string }) {
 function ApplePayHookForm() {
   const { applePayElementRef, isAvailable, submit } = useApplePay({
     options: { buttonType: 'buy', buttonStyle: 'black' },
-    onPaymentCompleted: (result) => {
+    onSuccess: (result) => {
       console.log('Payment result:', result);
     },
     onError: (error) => {

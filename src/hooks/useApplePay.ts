@@ -5,7 +5,7 @@ import { useCallbackRefs } from './useCallbackRefs';
 import type {
   ApplePayElementOptions,
   ApplePayPaymentRequest,
-  ApplePayPaymentResult,
+  PaymentSubmitResponse,
   ApplePayChangeEvent,
   ApplePayElement,
 } from '../types';
@@ -27,9 +27,9 @@ export interface UseApplePayOptions {
   onClick?: () => void;
 
   /**
-   * Callback when payment is completed
+   * Callback when payment succeeds
    */
-  onPaymentCompleted?: (result: ApplePayPaymentResult) => void | Promise<void>;
+  onSuccess?: (response: PaymentSubmitResponse) => void | Promise<void>;
 
   /**
    * Callback when user cancels
@@ -62,7 +62,7 @@ export interface UseApplePayResult {
   /**
    * Submit payment with provided payment request
    */
-  submit: (paymentRequest: ApplePayPaymentRequest) => Promise<ApplePayPaymentResult>;
+  submit: (paymentRequest: ApplePayPaymentRequest) => Promise<PaymentSubmitResponse>;
 }
 
 /**
@@ -73,8 +73,8 @@ export interface UseApplePayResult {
  * function CheckoutPage() {
  *   const { applePayElementRef, isAvailable, submit } = useApplePay({
  *     options: { buttonType: 'buy', buttonStyle: 'black' },
- *     onPaymentCompleted: (result) => {
- *       console.log('Payment completed:', result);
+ *     onSuccess: (response) => {
+ *       console.log('Payment completed:', response);
  *     }
  *   });
  *
@@ -100,7 +100,7 @@ export function useApplePay(config?: UseApplePayOptions): UseApplePayResult {
     onReady: config?.onReady,
     onChange: config?.onChange,
     onClick: config?.onClick,
-    onPaymentCompleted: config?.onPaymentCompleted,
+    onSuccess: config?.onSuccess,
     onCancel: config?.onCancel,
     onError: config?.onError,
   });
@@ -136,10 +136,10 @@ export function useApplePay(config?: UseApplePayOptions): UseApplePayResult {
         },
         onChange: (e: unknown) => callbacksRef.current.onChange?.(e as ApplePayChangeEvent),
         onClick: () => callbacksRef.current.onClick?.(),
-        onPaymentCompleted: async (result: unknown) => {
-          const typedResult = result as ApplePayPaymentResult;
+        onSuccess: async (result: unknown) => {
+          const typedResult = result as PaymentSubmitResponse;
           try {
-            await callbacksRef.current.onPaymentCompleted?.(typedResult);
+            await callbacksRef.current.onSuccess?.(typedResult);
           } catch (error) {
             const err = error instanceof Error ? error : new Error(String(error));
             if (callbacksRef.current.onError) {

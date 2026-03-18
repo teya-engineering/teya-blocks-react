@@ -50,7 +50,7 @@ describe('ApplePayElement', () => {
       <ApplePayElement
         onReady={() => {}}
         onClick={() => {}}
-        onPaymentCompleted={() => {}}
+        onSuccess={() => {}}
         onCancel={() => {}}
         onError={() => {}}
         onChange={() => {}}
@@ -63,7 +63,7 @@ describe('ApplePayElement', () => {
       expect.objectContaining({
         onReady: expect.any(Function),
         onClick: expect.any(Function),
-        onPaymentCompleted: expect.any(Function),
+        onSuccess: expect.any(Function),
         onCancel: expect.any(Function),
         onError: expect.any(Function),
         onChange: expect.any(Function),
@@ -257,34 +257,34 @@ describe('ApplePayElement', () => {
     expect(onCancel).toHaveBeenCalled();
   });
 
-  it('forwards onPaymentCompleted callback', async () => {
+  it('forwards onSuccess callback', async () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
-    const onPaymentCompleted = vi.fn();
+    const onSuccess = vi.fn();
 
-    render(<ApplePayElement onPaymentCompleted={onPaymentCompleted} />, {
+    render(<ApplePayElement onSuccess={onSuccess} />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
     const opts = getCreateOptions(mockTeya);
     const result = { status: 'SUCCESS', paymentId: 'pay_123' };
-    await act(async () => opts.onPaymentCompleted(result));
+    await act(async () => opts.onSuccess(result));
 
-    expect(onPaymentCompleted).toHaveBeenCalledWith(result);
+    expect(onSuccess).toHaveBeenCalledWith(result);
   });
 
-  it('calls onError when onPaymentCompleted throws', async () => {
+  it('calls onError when onSuccess throws', async () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
     const onError = vi.fn();
-    const onPaymentCompleted = vi.fn().mockRejectedValue(new Error('handler error'));
+    const onSuccess = vi.fn().mockRejectedValue(new Error('handler error'));
 
-    render(<ApplePayElement onPaymentCompleted={onPaymentCompleted} onError={onError} />, {
+    render(<ApplePayElement onSuccess={onSuccess} onError={onError} />, {
       wrapper: createWrapper(mockTeya as unknown as TeyaBlocks),
     });
 
     const opts = getCreateOptions(mockTeya);
-    await act(async () => opts.onPaymentCompleted({ status: 'SUCCESS' }));
+    await act(async () => opts.onSuccess({ status: 'SUCCESS' }));
 
     expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: 'handler error' }));
   });

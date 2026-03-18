@@ -1,6 +1,6 @@
 {
   "name": "@teyaproduct/teya-blocks-react",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "React components for Teya Blocks payment SDK",
   "type": "module",
   "main": "dist/index.cjs",
@@ -66,7 +66,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@teyaproduct/teya-blocks-js": "^0.1.0"
+    "@teyaproduct/teya-blocks-js": "^0.2.0"
   },
   "engines": {
     "node": ">=18"

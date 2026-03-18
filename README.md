@@ -240,29 +240,27 @@ const ApplePay = () => (
       total: { label: 'My Store', amount: '10.00' },
     }}
     autoSubmit
-    onPaymentCompleted={(result) => {
-      if (result.status === 'SUCCESS') {
-        console.log('Payment ID:', result.paymentId);
-      }
+    onSuccess={(response) => {
+      console.log('Payment ID:', response.payment_id);
     }}
     onError={(error) => console.error(error)}
   />
 );
 ```
 
-| Prop                 | Type                     | Description                                       |
-| -------------------- | ------------------------ | ------------------------------------------------- |
-| `options`            | `ApplePayElementOptions` | Button styling options                            |
-| `paymentRequest`     | `ApplePayPaymentRequest` | Payment request configuration                     |
-| `autoSubmit`         | `boolean`                | Auto-initiate payment on click (default: `false`) |
-| `onReady`            | `(element) => void`      | Called when element is ready                      |
-| `onClick`            | `() => void`             | Called when button is clicked                     |
-| `onPaymentCompleted` | `(result) => void`       | Called when payment completes                     |
-| `onCancel`           | `() => void`             | Called when user cancels                          |
-| `onError`            | `(error: Error) => void` | Called when an error occurs                       |
-| `onChange`           | `(event) => void`        | Called when availability changes                  |
-| `className`          | `string`                 | Container CSS class                               |
-| `style`              | `CSSProperties`          | Container inline styles                           |
+| Prop             | Type                                    | Description                                       |
+| ---------------- | --------------------------------------- | ------------------------------------------------- |
+| `options`        | `ApplePayElementOptions`                | Button styling options                            |
+| `paymentRequest` | `ApplePayPaymentRequest`                | Payment request configuration                     |
+| `autoSubmit`     | `boolean`                               | Auto-initiate payment on click (default: `false`) |
+| `onReady`        | `(element) => void`                     | Called when element is ready                      |
+| `onClick`        | `() => void`                            | Called when button is clicked                     |
+| `onSuccess`      | `(response: PaymentSubmitResponse) => void` | Called when payment succeeds                  |
+| `onCancel`       | `() => void`                            | Called when user cancels                          |
+| `onError`        | `(error: Error) => void`                | Called when an error occurs                       |
+| `onChange`       | `(event) => void`                       | Called when availability changes                  |
+| `className`      | `string`                                    | Container CSS class                               |
+| `style`          | `CSSProperties`                             | Container inline styles                           |
 
 ---
 
@@ -440,7 +438,7 @@ Hook for programmatic Apple Pay integration.
 ```jsx
 const { applePayElementRef, isAvailable, submit } = useApplePay({
   options: { buttonType: 'buy', buttonStyle: 'black' },
-  onPaymentCompleted: (result) => console.log('Payment:', result),
+  onSuccess: (response) => console.log('Payment:', response),
   onError: (error) => console.error(error),
 });
 

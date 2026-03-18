@@ -68,7 +68,7 @@ describe('useApplePay', () => {
     renderWithTeya(mockTeya as unknown as TeyaBlocks, {
       onReady: () => {},
       onClick: () => {},
-      onPaymentCompleted: () => {},
+      onSuccess: () => {},
       onCancel: () => {},
       onError: () => {},
       onChange: () => {},
@@ -79,7 +79,7 @@ describe('useApplePay', () => {
       expect.objectContaining({
         onReady: expect.any(Function),
         onClick: expect.any(Function),
-        onPaymentCompleted: expect.any(Function),
+        onSuccess: expect.any(Function),
         onCancel: expect.any(Function),
         onError: expect.any(Function),
         onChange: expect.any(Function),
@@ -195,44 +195,44 @@ describe('useApplePay', () => {
     expect(onCancel).toHaveBeenCalled();
   });
 
-  it('forwards onPaymentCompleted callback', async () => {
+  it('forwards onSuccess callback', async () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
-    const onPaymentCompleted = vi.fn();
+    const onSuccess = vi.fn();
 
-    renderWithTeya(mockTeya as unknown as TeyaBlocks, { onPaymentCompleted });
+    renderWithTeya(mockTeya as unknown as TeyaBlocks, { onSuccess });
 
     const opts = getCreateOptions(mockTeya);
     const result = { status: 'SUCCESS' };
-    await act(async () => opts.onPaymentCompleted(result));
+    await act(async () => opts.onSuccess(result));
 
-    expect(onPaymentCompleted).toHaveBeenCalledWith(result);
+    expect(onSuccess).toHaveBeenCalledWith(result);
   });
 
-  it('calls onError when onPaymentCompleted throws', async () => {
+  it('calls onError when onSuccess throws', async () => {
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
     const onError = vi.fn();
-    const onPaymentCompleted = vi.fn().mockRejectedValue(new Error('handler error'));
+    const onSuccess = vi.fn().mockRejectedValue(new Error('handler error'));
 
-    renderWithTeya(mockTeya as unknown as TeyaBlocks, { onPaymentCompleted, onError });
+    renderWithTeya(mockTeya as unknown as TeyaBlocks, { onSuccess, onError });
 
     const opts = getCreateOptions(mockTeya);
-    await act(async () => opts.onPaymentCompleted({ status: 'SUCCESS' }));
+    await act(async () => opts.onSuccess({ status: 'SUCCESS' }));
 
     expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: 'handler error' }));
   });
 
-  it('logs error when onPaymentCompleted throws and no onError provided', async () => {
+  it('logs error when onSuccess throws and no onError provided', async () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const { block } = createMockBlock();
     const mockTeya = createMockTeya({ block });
-    const onPaymentCompleted = vi.fn().mockRejectedValue(new Error('handler error'));
+    const onSuccess = vi.fn().mockRejectedValue(new Error('handler error'));
 
-    renderWithTeya(mockTeya as unknown as TeyaBlocks, { onPaymentCompleted });
+    renderWithTeya(mockTeya as unknown as TeyaBlocks, { onSuccess });
 
     const opts = getCreateOptions(mockTeya);
-    await act(async () => opts.onPaymentCompleted({ status: 'SUCCESS' }));
+    await act(async () => opts.onSuccess({ status: 'SUCCESS' }));
 
     expect(errorSpy).toHaveBeenCalledWith(
       '[Teya Blocks] Apple Pay payment error:',
