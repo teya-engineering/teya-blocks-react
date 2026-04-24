@@ -1,5 +1,11 @@
 # @teyaproduct/teya-blocks-react
 
+## 0.2.0
+
+### Minor Changes
+
+- Update callback types
+
 ## 0.1.0
 
 ### Minor Changes
