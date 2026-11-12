@@ -59,7 +59,7 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tsup": "^9.0.0",
-    "typescript": "^5.3.0",
+    "typescript": "^7.0.2",
     "vitest": "^4.0.18"
   },
   "publishConfig": {
